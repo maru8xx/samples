@@ -1,0 +1,60 @@
+<!DOCUTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <script src="i18next.js"></script>
+    <script>
+      function assert(value, desc) {
+          var li = document.createElement("li");
+          li.className = value ? "pass" : "fail";
+          li.appendChild(document.createTextNode(desc));
+          document.getElementById("results").appendChild(li);
+      }
+
+      var lang = "jp";
+      window.onload = function () {
+          var option = { lng: lang,
+                         ns: 'string',
+                         fallbackLng: false, //default file (dev)
+                         sendMissing: true, // For DEBBUG
+                         sendMissingTo: "all", // For DEBBUG
+                         resPostPath: 'add/__lng__/__ns__.json', // For DEBBUG
+                         resGetPath: '__ns_____lng__.json' };   //__ns__, __lng__
+
+          i18n.init(option, function(t) { 
+                                assert(true, "init is done");
+                                assert(true,  i18n.t("STRID_TEST1"));
+          });
+
+          assert(true, "Not sure whether init is done or not");
+         //assert(true,  i18n.t("STRID_TEST1")); //In i18next, build error is occured
+
+          document.getElementById("btn1").onclick = function () {
+              if (lang === "jp") {
+                  lang = "en";
+              } else {
+                  lang = "jp";
+              }
+
+              assert(true, "clicked");
+
+              i18n.setLng(lang, function(t) {
+                  assert(true, "callback is called");
+                  //assert(true, i18n.t("STRID_TEST1"));
+                  assert(true, i18n.t("STRID_TEST2"));
+              });
+              assert(true, "not sure whether callback is called or not");
+              //assert(true, i18n.t("STRID_TEST1", {defaultValue: ""})); //When we use sendMissing, build error is occured.
+          };
+      };
+    </script>
+    <style>
+      #results li.pass { color: green; }
+      #results li.fail { color: red; }
+    </style>
+  </head>
+  <body>
+    <ul id="results"></ul>
+    <input id="btn1" type="button" value="TEST"/>
+  </body>
+</html>

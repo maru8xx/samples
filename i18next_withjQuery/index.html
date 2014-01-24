@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8"/>
+  <script src="jquery-1.10.2.js"></script>
+  <script src="i18next.js"></script>
+  <script>
+    var lang = "jp";
+
+    function assert(value, desc) {
+        var li = document.createElement("li");
+        li.className = value ? "pass" : "fail";
+        li.appendChild(document.createTextNode(desc));
+        document.getElementById("results").appendChild(li);
+    }
+
+    function assert_i18n(value, key) {
+        var li = document.createElement("li");
+        li.className = value ? "pass" : "fail";
+        li.setAttribute("data-i18n", key);
+        document.getElementById("results").appendChild(li);
+    }
+
+
+    window.onload = function() {
+        assert(true, "onload is called");
+        var option = { lng: lang,
+                       ns: "string",
+                       fallbackLng: false,
+                       resGetPath: "__ns_____lng__.json" };
+                       
+        $.i18n.init(option).done(function () { 
+            assert(true, $.i18n.t("STRID_XXXX1"))
+            $("#results").i18n();
+        }); //deffered
+
+    };
+
+    $(document).ready( function() {
+        assert(true, "ready is called");
+        $("#btn1").click( function () {
+            if(lang === "jp") {
+                lang = "en";    
+            } else {
+                lang = "jp";
+            }
+
+            //optionを指定しないとbuild error. extendしないので{}を設定
+            $.i18n.setLng(lang, {}).done(function () { 
+                //assert(true, $.i18n.t("STRID_XXXX1")); 
+                assert_i18n(true, "STRID_XXXX1"); 
+                $("#results").i18n();
+            });　
+
+        });
+
+    } );
+
+  </script>
+
+
+  <style>
+    #results li.pass { color: green; }
+    #results li.fail { color: red; }
+  </style>
+</head>
+<body>
+  <ul id="results">
+    <li data-i18n=STRID_XXXX1></li>
+  </ul>
+  <input id="btn1" type="button" value="TEST"></input>
+
+</body>
